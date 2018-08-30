@@ -32,7 +32,7 @@ public class VehicleFactoryTest {
 		assertThat(vehicles).containsOnly(new Vehicle(clock, 0, 1));
 	}
 
-	private <T> List<T> listOf(T... elements) {
+	private List<SensorPoint> listOf(SensorPoint... elements) {
 		return Arrays.stream(elements).collect(Collectors.toList());
 	}
 }

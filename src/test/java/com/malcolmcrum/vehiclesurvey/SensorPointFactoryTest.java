@@ -51,7 +51,7 @@ public class SensorPointFactoryTest {
 				.isInstanceOf(IOException.class);
 	}
 
-	private <T> List<T> listOf (T... items) {
+	private List<String> listOf (String... items) {
 		return Arrays.stream(items).collect(Collectors.toList());
 	}
 }
