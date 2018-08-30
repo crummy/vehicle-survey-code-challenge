@@ -4,6 +4,8 @@ A coding challenge for Aconex
 
 ## Instructions
 
+* ./gradlew build
+* java -jar build/libs/vehicle-survey.jar sampledata.txt
 
 ## Explanation
 
