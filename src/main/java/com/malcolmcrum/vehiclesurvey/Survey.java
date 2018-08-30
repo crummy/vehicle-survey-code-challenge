@@ -1,9 +1,13 @@
 package com.malcolmcrum.vehiclesurvey;
 
-public class Survey {
-	private final SensorData sensors;
+import java.util.List;
 
-	public Survey(SensorData sensors) {
-		this.sensors = sensors;
+public class Survey {
+	private static long WHEELBASE_MM = 2500L;
+
+	private final List<Vehicle> vehicles;
+
+	public Survey(List<Vehicle> vehicles) {
+		this.vehicles = vehicles;
 	}
 }
