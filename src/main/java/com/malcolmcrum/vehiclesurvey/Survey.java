@@ -7,8 +7,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
 class Survey {
@@ -49,7 +49,8 @@ class Survey {
 	}
 
 	Map<String, Long> getCarsPerDay() {
-		 return vehicles.stream().collect(groupingBy(this::getDayName, TreeMap::new, Collectors.counting()));
+		 return vehicles.stream()
+				 .collect(groupingBy(this::getDayName, TreeMap::new, counting()));
 	}
 
 	private String getDayName(Vehicle vehicle) {

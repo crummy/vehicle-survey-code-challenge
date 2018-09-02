@@ -51,6 +51,14 @@ class Vehicle {
 				.orElseThrow(() -> new RuntimeException("No sensor intervals found to find maximum for"));
 	}
 
+	public Direction getDirection() {
+		return direction;
+	}
+
+	enum Direction {
+		NORTHBOUND, SOUTHBOUND
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -58,19 +66,12 @@ class Vehicle {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Vehicle vehicle = (Vehicle) o;
-		return Objects.equals(sensorIntervals, vehicle.sensorIntervals);
+		return Objects.equals(sensorIntervals, vehicle.sensorIntervals) &&
+				direction == vehicle.direction;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(sensorIntervals);
-	}
-
-	public Direction getDirection() {
-		return direction;
-	}
-
-	enum Direction {
-		NORTHBOUND, SOUTHBOUND
+		return Objects.hash(sensorIntervals, direction);
 	}
 }
