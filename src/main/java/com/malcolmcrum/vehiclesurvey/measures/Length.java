@@ -12,10 +12,6 @@ public class Length {
 		this.meters = meters;
 	}
 
-	public static Length fromMillimeters(double mm) {
-		return new Length(mm * 1000);
-	}
-
 	public static Length fromMeters(double m) {
 		return new Length(m);
 	}

@@ -2,15 +2,12 @@ package com.malcolmcrum.vehiclesurvey;
 
 import org.junit.Test;
 
-import java.time.Clock;
 import java.util.List;
 
 import static com.malcolmcrum.vehiclesurvey.SensorPointParserTest.listOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class EndToEndTest {
-
-	private Clock clock = Clock.systemUTC();
 
 	@Test
 	public void testSingleSensorCar() {

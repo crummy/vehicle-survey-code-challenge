@@ -37,6 +37,36 @@ public class SensorPointParserTest {
 	}
 
 	@Test
+	public void sampleDataPoints() { // First six lines of sampledata.txt
+		List<String> sample = listOf("A98186", "A98333", "A499718", "A499886", "A638379", "B638382", "A638520", "B638523");
+
+		List<SensorPoint> points = new SensorPointParser(sample).getPoints();
+
+		assertThat(points).containsSequence(
+				new SensorPoint('A', 98186L, 0),
+				new SensorPoint('A', 98333L, 0),
+				new SensorPoint('A', 499718L, 0),
+				new SensorPoint('A', 499886L, 0),
+				new SensorPoint('A', 638379L, 0),
+				new SensorPoint('B', 638382L, 0),
+				new SensorPoint('A', 638520L, 0),
+				new SensorPoint('B', 638523L, 0)
+		);
+	}
+
+	@Test
+	public void nextDayParsing() {
+		List<String> sample = listOf("A99", "A0");
+
+		List<SensorPoint> points = new SensorPointParser(sample).getPoints();
+
+		assertThat(points).containsSequence(
+				new SensorPoint('A', 99L, 0),
+				new SensorPoint('A', 0L, 1)
+		);
+	}
+
+	@Test
 	public void emptyData() {
 		List<String> noData = listOf();
 
