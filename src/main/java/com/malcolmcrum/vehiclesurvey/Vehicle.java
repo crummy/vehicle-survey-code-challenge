@@ -27,6 +27,7 @@ class Vehicle {
 		this.direction = direction;
 	}
 
+	// At what instant does a car cross a physical point? For simplicity's sake I've decided it's the time the first sensor is triggered.
 	Instant getFirstSensor() {
 		return firstSensor;
 	}

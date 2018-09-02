@@ -60,5 +60,6 @@ class App {
 		System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +
 				survey.getTotalCars(SOUTHBOUND) + " southbound)");
 		System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
+		System.out.println("Cars per day: " + survey.getCarsPerDay());
 	}
 }

@@ -2,13 +2,25 @@ package com.malcolmcrum.vehiclesurvey;
 
 import com.malcolmcrum.vehiclesurvey.measures.Speed;
 
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 class Survey {
 
 	private final List<Vehicle> vehicles;
+	private final Clock clock;
 
 	Survey(List<Vehicle> vehicles) {
+		this(vehicles, Clock.systemUTC());
+	}
+
+	Survey(List<Vehicle> vehicles, Clock clock) {
+		this.clock = clock;
 		this.vehicles = vehicles;
 		if (vehicles.isEmpty()) {
 			throw new InvalidSurveyException("A survey cannot be performed on 0 vehicles");
@@ -33,6 +45,15 @@ class Survey {
 		return vehicles.stream()
 				.filter(vehicle -> vehicle.getDirection().equals(direction))
 				.count();
+	}
+
+	Map<String, Long> getCarsPerDay() {
+		 return vehicles.stream().collect(groupingBy(this::getDayName, Collectors.counting()));
+	}
+
+	private String getDayName(Vehicle vehicle) {
+		LocalDateTime dateTime = LocalDateTime.ofInstant(vehicle.getFirstSensor(), clock.getZone());
+		return dateTime.toLocalDate().toString();
 	}
 
 	Speed getMaxSpeed() {
