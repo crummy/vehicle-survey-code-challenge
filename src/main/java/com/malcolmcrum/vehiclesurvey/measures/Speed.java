@@ -7,11 +7,10 @@ import java.util.Objects;
  * A helper class to store speed in a consistent manner to allow conversion between units without confusion.
  */
 public class Speed implements Comparable<Speed> {
-	public static final Speed ZERO = new Speed(0);
 	private final double metersPerSecond;
 
 	public Speed(Length length, Duration time) {
-		this.metersPerSecond = length.getMeters() * time.getSeconds();
+		this.metersPerSecond = length.getMeters() * time.toMillis() / 1000;
 	}
 
 	public Speed(double metersPerSecond) {
@@ -20,10 +19,6 @@ public class Speed implements Comparable<Speed> {
 
 	public double getMetersPerSecond() {
 		return metersPerSecond;
-	}
-
-	public Speed plus(Speed other) {
-		return new Speed(metersPerSecond + other.metersPerSecond);
 	}
 
 	public double getKilometersPerHour() {

@@ -19,4 +19,9 @@ public class Length {
 	double getMeters() {
 		return meters;
 	}
+
+	@Override
+	public String toString() {
+		return meters + "m";
+	}
 }

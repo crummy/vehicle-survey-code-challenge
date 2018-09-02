@@ -15,4 +15,13 @@ public class SpeedTest {
 
 		assertThat(kph).isEqualTo(3.6);
 	}
+
+	@Test
+	public void testMeterPerSecond() {
+		Speed oneMeterPerSecond = new Speed(Length.METER, Duration.ofSeconds(1));
+
+		double mps = oneMeterPerSecond.getMetersPerSecond();
+
+		assertThat(mps).isEqualTo(1.0);
+	}
 }

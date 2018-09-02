@@ -11,7 +11,7 @@ public class EndToEndTest {
 
 	@Test
 	public void testSingleSensorCar() {
-		List<String> singleSensor = listOf("A9", "A10");
+		List<String> singleSensor = listOf("A98186", "A98333");
 
 		List<SensorPoint> points = new SensorPointParser(singleSensor).getPoints();
 		List<Vehicle> vehicles = new VehicleFactory(points).getVehicles();

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-class Vehicle {
-	static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
+public class Vehicle {
+	public static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
 
 	private final Instant firstSensor;
 	private final List<Duration> sensorIntervals = new ArrayList<>();
