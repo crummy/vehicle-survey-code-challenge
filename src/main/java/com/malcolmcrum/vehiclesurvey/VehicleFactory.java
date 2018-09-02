@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class VehicleFactory {
+class VehicleFactory {
 	private final Clock clock;
 	private final List<SensorPoint> points;
-	private List<Vehicle> vehicles = new ArrayList<>();
+	private final List<Vehicle> vehicles = new ArrayList<>();
 
 	public VehicleFactory(Clock clock, List<SensorPoint> sensorPoints) {
 		this.clock = clock;
@@ -46,7 +46,7 @@ public class VehicleFactory {
 	private void addDoubleSensorVehicle(SensorPoint point, SensorPoint secondPoint, SensorPoint thirdPoint,
 			SensorPoint fourthPoint) {
 		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), secondPoint.getTotalMillis(), thirdPoint.getTotalMillis(),
-				fourthPoint.getTotalMillis());
+				fourthPoint.getTotalMillis(), Vehicle.Direction.SOUTHBOUND);
 		vehicles.add(vehicle);
 	}
 
@@ -55,17 +55,16 @@ public class VehicleFactory {
 	}
 
 	private void addSingleSensorVehicle(SensorPoint point, SensorPoint nextPoint) {
-		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), nextPoint.getTotalMillis());
+		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), nextPoint.getTotalMillis(), Vehicle.Direction.NORTHBOUND);
 		vehicles.add(vehicle);
 	}
 
-	public List<Vehicle> getVehicles() {
+	List<Vehicle> getVehicles() {
 		return vehicles;
 	}
 
 	static class VehicleParsingException extends RuntimeException {
-
-		public VehicleParsingException(String reason, SensorPoint... points) {
+		VehicleParsingException(String reason, SensorPoint... points) {
 			super(reason + " " + Arrays.toString(points));
 		}
 	}

@@ -29,7 +29,7 @@ public class VehicleFactoryTest {
 		List<SensorPoint> points = listOf(new SensorPoint('A', 0, 0), new SensorPoint('A', 1, 0));
 		List<Vehicle> vehicles = new VehicleFactory(clock, points).getVehicles();
 
-		assertThat(vehicles).containsOnly(new Vehicle(clock, 0, 1));
+		assertThat(vehicles).containsOnly(new Vehicle(clock, 0, 1, Vehicle.Direction.NORTHBOUND));
 	}
 
 	private List<SensorPoint> listOf(SensorPoint... elements) {

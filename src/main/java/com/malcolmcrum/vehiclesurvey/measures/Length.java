@@ -4,7 +4,7 @@ package com.malcolmcrum.vehiclesurvey.measures;
  * A helper class to store distance in a consistent manner to allow conversion between units without confusion.
  */
 public class Length {
-	public static final Length METER = new Length(1);
+	static final Length METER = new Length(1);
 
 	private final double meters;
 
@@ -20,7 +20,7 @@ public class Length {
 		return new Length(m);
 	}
 
-	public double getMeters() {
+	double getMeters() {
 		return meters;
 	}
 }

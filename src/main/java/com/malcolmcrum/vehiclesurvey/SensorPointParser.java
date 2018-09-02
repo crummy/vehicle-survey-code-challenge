@@ -19,7 +19,7 @@ import java.util.stream.Stream;
  * NOTE: This is not a perfect way to detect a day! For example, if at least one day goes past with no sensor readings, then the
  * day count will be inaccurate.
  */
-public class SensorPointParser {
+class SensorPointParser {
 
 	private static final Pattern POINT_PATTERN = Pattern.compile("([AB])(\\d+)");
 	private final List<SensorPoint> points;

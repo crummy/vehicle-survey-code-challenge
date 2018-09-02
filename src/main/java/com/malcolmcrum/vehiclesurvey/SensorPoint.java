@@ -50,7 +50,7 @@ class SensorPoint {
 		return day * MILLIS_IN_DAY + millis;
 	}
 
-	public char getSensor() {
+	char getSensor() {
 		return sensor;
 	}
 }

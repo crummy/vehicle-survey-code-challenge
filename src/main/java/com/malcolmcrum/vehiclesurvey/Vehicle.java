@@ -13,19 +13,21 @@ import java.util.Objects;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 class Vehicle {
-	private static Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
+	private static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
 
 	private final Instant time;
 	private final List<Duration> sensorIntervals = new ArrayList<>();
+	private final Direction direction;
 
-	Vehicle(Clock clock, long axleStart, long axleEnd, long secondAxleStart, long secondAxleEnd) {
-		this(clock, axleStart, axleEnd);
+	Vehicle(Clock clock, long axleStart, long axleEnd, long secondAxleStart, long secondAxleEnd, Direction direction) {
+		this(clock, axleStart, axleEnd, direction);
 		this.sensorIntervals.add(durationBetween(secondAxleStart, secondAxleEnd));
 	}
 
-	Vehicle(Clock clock, long axleStart, long axleEnd) {
+	Vehicle(Clock clock, long axleStart, long axleEnd, Direction direction) {
 		this.time = Instant.now(clock).plus(axleStart, MILLIS);
 		this.sensorIntervals.add(durationBetween(axleStart, axleEnd));
+		this.direction = direction;
 	}
 
 	private Duration durationBetween(long axleStart, long axleEnd) {
@@ -34,17 +36,27 @@ class Vehicle {
 		return Duration.between(start, end);
 	}
 
-	public Instant getTime() {
+	Instant getTime() {
 		return time;
 	}
 
-	public Speed getAverageSpeed() {
+	Speed getAverageSpeed() {
 		return new Speed(WHEELBASE, getAverageSensorInterval());
 	}
 
 	Duration getAverageSensorInterval() {
 		Duration total = sensorIntervals.stream().reduce(Duration.ZERO, Duration::plus);
 		return total.dividedBy(sensorIntervals.size());
+	}
+
+	Speed getMaxSpeed() {
+		return new Speed(WHEELBASE, getMaxSensorInterval());
+	}
+
+	private Duration getMaxSensorInterval() {
+		return sensorIntervals.stream()
+				.max(Duration::compareTo)
+				.orElseThrow(() -> new RuntimeException("No sensor intervals found to find maximum for"));
 	}
 
 	@Override
@@ -61,5 +73,13 @@ class Vehicle {
 	@Override
 	public int hashCode() {
 		return Objects.hash(time, sensorIntervals);
+	}
+
+	public Direction getDirection() {
+		return direction;
+	}
+
+	enum Direction {
+		NORTHBOUND, SOUTHBOUND
 	}
 }

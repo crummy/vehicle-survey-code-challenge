@@ -9,16 +9,22 @@ import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
-public class App {
+import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.*;
+
+class App {
 	public static void main(String[] args) {
 		try {
 			validateArgs(args);
 			Path file = validateFile(args[0]);
+
 			List<SensorPoint> sensorPoints = SensorPointParser.parse(file).getPoints();
 			Clock clock = validateClock(args).orElse(Clock.systemUTC());
 			List<Vehicle> vehicles = new VehicleFactory(clock, sensorPoints).getVehicles();
 			Survey survey = new Survey(vehicles);
-			System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed().getKilometersPerHour());
+			System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed().getKilometersPerHour() + "kph");
+			System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +
+					survey.getTotalCars(SOUTHBOUND) + " southbound)");
+			System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
 		} catch (Exception e) {
 			abort("An uncaught exception occurred: " + e.getMessage());
 		}
