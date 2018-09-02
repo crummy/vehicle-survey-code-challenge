@@ -1,14 +1,20 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
 class SensorPoint {
-	final char sensor;
-	final long millis;
+	private final static long MILLIS_IN_DAY = Duration.of(1, ChronoUnit.DAYS).toMillis();
 
-	SensorPoint(char sensor, long millis) {
+	private final char sensor;
+	private final long millis;
+	private final int day;
+
+	SensorPoint(char sensor, long millis, int day) {
 		this.sensor = sensor;
 		this.millis = millis;
+		this.day = day;
 	}
 
 	@Override
@@ -30,5 +36,21 @@ class SensorPoint {
 	@Override
 	public int hashCode() {
 		return Objects.hash(sensor, millis);
+	}
+
+	int getDay() {
+		return day;
+	}
+
+	long getMillis() {
+		return millis;
+	}
+
+	long getTotalMillis() {
+		return day * MILLIS_IN_DAY + millis;
+	}
+
+	public char getSensor() {
+		return sensor;
 	}
 }

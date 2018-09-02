@@ -14,10 +14,11 @@ public class App {
 		try {
 			validateArgs(args);
 			Path file = validateFile(args[0]);
-			List<SensorPoint> sensorPoints = SensorPointFactory.parse(file).getPoints();
+			List<SensorPoint> sensorPoints = SensorPointParser.parse(file).getPoints();
 			Clock clock = validateClock(args).orElse(Clock.systemUTC());
 			List<Vehicle> vehicles = new VehicleFactory(clock, sensorPoints).getVehicles();
 			Survey survey = new Survey(vehicles);
+			System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed().getKilometersPerHour());
 		} catch (Exception e) {
 			abort("An uncaught exception occurred: " + e.getMessage());
 		}

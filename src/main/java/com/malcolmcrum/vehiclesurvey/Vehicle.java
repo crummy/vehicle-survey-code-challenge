@@ -1,5 +1,8 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import com.malcolmcrum.vehiclesurvey.measures.Length;
+import com.malcolmcrum.vehiclesurvey.measures.Speed;
+
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -10,17 +13,19 @@ import java.util.Objects;
 import static java.time.temporal.ChronoUnit.MILLIS;
 
 class Vehicle {
+	private static Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
+
 	private final Instant time;
-	private final List<Duration> sensorDurations = new ArrayList<>();
+	private final List<Duration> sensorIntervals = new ArrayList<>();
 
 	Vehicle(Clock clock, long axleStart, long axleEnd, long secondAxleStart, long secondAxleEnd) {
 		this(clock, axleStart, axleEnd);
-		this.sensorDurations.add(durationBetween(secondAxleStart, secondAxleEnd));
+		this.sensorIntervals.add(durationBetween(secondAxleStart, secondAxleEnd));
 	}
 
 	Vehicle(Clock clock, long axleStart, long axleEnd) {
 		this.time = Instant.now(clock).plus(axleStart, MILLIS);
-		this.sensorDurations.add(durationBetween(axleStart, axleEnd));
+		this.sensorIntervals.add(durationBetween(axleStart, axleEnd));
 	}
 
 	private Duration durationBetween(long axleStart, long axleEnd) {
@@ -33,6 +38,15 @@ class Vehicle {
 		return time;
 	}
 
+	public Speed getAverageSpeed() {
+		return new Speed(WHEELBASE, getAverageSensorInterval());
+	}
+
+	Duration getAverageSensorInterval() {
+		Duration total = sensorIntervals.stream().reduce(Duration.ZERO, Duration::plus);
+		return total.dividedBy(sensorIntervals.size());
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		if (this == o)
@@ -41,11 +55,11 @@ class Vehicle {
 			return false;
 		Vehicle vehicle = (Vehicle) o;
 		return Objects.equals(time, vehicle.time) &&
-				Objects.equals(sensorDurations, vehicle.sensorDurations);
+				Objects.equals(sensorIntervals, vehicle.sensorIntervals);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(time, sensorDurations);
+		return Objects.hash(time, sensorIntervals);
 	}
 }

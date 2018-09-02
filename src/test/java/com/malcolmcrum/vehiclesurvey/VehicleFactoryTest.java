@@ -16,7 +16,7 @@ public class VehicleFactoryTest {
 
 	@Test
 	public void clockUsedForVehicle() {
-		List<SensorPoint> points = listOf(new SensorPoint('A', 0), new SensorPoint('A', 1));
+		List<SensorPoint> points = listOf(new SensorPoint('A', 0, 0), new SensorPoint('A', 1, 0));
 		List<Vehicle> vehicles = new VehicleFactory(clock, points).getVehicles();
 
 		Vehicle vehicle = vehicles.get(0);
@@ -26,7 +26,7 @@ public class VehicleFactoryTest {
 
 	@Test
 	public void singleSensorVehicle() {
-		List<SensorPoint> points = listOf(new SensorPoint('A', 0), new SensorPoint('A', 1));
+		List<SensorPoint> points = listOf(new SensorPoint('A', 0, 0), new SensorPoint('A', 1, 0));
 		List<Vehicle> vehicles = new VehicleFactory(clock, points).getVehicles();
 
 		assertThat(vehicles).containsOnly(new Vehicle(clock, 0, 1));

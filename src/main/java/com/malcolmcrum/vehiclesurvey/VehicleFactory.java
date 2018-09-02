@@ -38,23 +38,24 @@ public class VehicleFactory {
 
 	private boolean areDoubleSensorPoints(SensorPoint point, SensorPoint secondPoint, SensorPoint thirdPoint,
 			SensorPoint fourthPoint) {
-		return point.sensor == thirdPoint.sensor &&
-				secondPoint.sensor == fourthPoint.sensor &&
-				point.sensor != secondPoint.sensor;
+		return point.getSensor() == thirdPoint.getSensor() &&
+				secondPoint.getSensor() == fourthPoint.getSensor() &&
+				point.getSensor() != secondPoint.getSensor();
 	}
 
 	private void addDoubleSensorVehicle(SensorPoint point, SensorPoint secondPoint, SensorPoint thirdPoint,
 			SensorPoint fourthPoint) {
-		Vehicle vehicle = new Vehicle(clock, point.millis, secondPoint.millis, thirdPoint.millis, fourthPoint.millis);
+		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), secondPoint.getTotalMillis(), thirdPoint.getTotalMillis(),
+				fourthPoint.getTotalMillis());
 		vehicles.add(vehicle);
 	}
 
 	private boolean areSingleSensorPoints(SensorPoint point, SensorPoint nextPoint) {
-		return point.sensor == nextPoint.sensor;
+		return point.getSensor() == nextPoint.getSensor();
 	}
 
 	private void addSingleSensorVehicle(SensorPoint point, SensorPoint nextPoint) {
-		Vehicle vehicle = new Vehicle(clock, point.millis, nextPoint.millis);
+		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), nextPoint.getTotalMillis());
 		vehicles.add(vehicle);
 	}
 
