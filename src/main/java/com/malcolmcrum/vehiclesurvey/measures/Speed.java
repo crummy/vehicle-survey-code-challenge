@@ -10,7 +10,7 @@ public class Speed implements Comparable<Speed> {
 	private final double metersPerSecond;
 
 	public Speed(Length length, Duration time) {
-		this.metersPerSecond = length.getMeters() * time.toMillis() / 1000;
+		this.metersPerSecond = length.getMeters() / time.toMillis() * 1000;
 	}
 
 	public Speed(double metersPerSecond) {
