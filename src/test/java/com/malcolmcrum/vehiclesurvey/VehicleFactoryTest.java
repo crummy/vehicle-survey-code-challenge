@@ -18,6 +18,20 @@ public class VehicleFactoryTest {
 		assertThat(vehicles).containsOnly(new Vehicle(Instant.ofEpochMilli(0), Instant.ofEpochMilli(1), Vehicle.Direction.NORTHBOUND));
 	}
 
+	@Test
+	public void doubleSensorVehicle() {
+		List<SensorPoint> points = listOf(
+				new SensorPoint('A', 0, 0),
+				new SensorPoint('B', 1, 0),
+				new SensorPoint('A', 10, 0),
+				new SensorPoint('B', 11, 0)
+				);
+		List<Vehicle> vehicles = new VehicleFactory(points).getVehicles();
+
+		assertThat(vehicles).containsOnly(new Vehicle(Instant.ofEpochMilli(0), Instant.ofEpochMilli(1), Instant.ofEpochMilli(10),
+				Instant.ofEpochMilli(11), Vehicle.Direction.NORTHBOUND));
+	}
+
 	private List<SensorPoint> listOf(SensorPoint... elements) {
 		return Arrays.stream(elements).collect(Collectors.toList());
 	}
