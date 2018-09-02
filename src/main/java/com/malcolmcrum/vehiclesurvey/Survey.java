@@ -3,10 +3,12 @@ package com.malcolmcrum.vehiclesurvey;
 import com.malcolmcrum.vehiclesurvey.measures.Speed;
 
 import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
@@ -53,6 +55,15 @@ class Survey {
 				 .collect(groupingBy(this::getDayName, TreeMap::new, counting()));
 	}
 
+	Summary getSummary(Instant from, Instant until) {
+		List<Vehicle> filtered = vehicles.stream()
+				.filter(vehicle -> vehicle.getFirstSensor().isAfter(from))
+				.filter(vehicle -> vehicle.getFirstSensor().isBefore(until))
+				.collect(Collectors.toList());
+
+		return new Summary(filtered);
+	}
+
 	private String getDayName(Vehicle vehicle) {
 		LocalDateTime dateTime = LocalDateTime.ofInstant(vehicle.getFirstSensor(), clock.getZone());
 		return dateTime.toLocalDate().toString();
@@ -68,6 +79,31 @@ class Survey {
 	static class InvalidSurveyException extends RuntimeException {
 		InvalidSurveyException(String message) {
 			super(message);
+		}
+	}
+
+	private static class Summary {
+		private final int totalCars;
+		private final double averageKph;
+		private final double maxKph;
+
+		public Summary(List<Vehicle> vehicles) {
+			this.totalCars = vehicles.size();
+			this.averageKph = vehicles.stream()
+					.mapToDouble(vehicle -> vehicle.getAverageSpeed().getKilometersPerHour())
+					.average()
+					.orElseThrow(() -> new RuntimeException("No vehicles found"));
+			this.maxKph = vehicles.stream()
+					.mapToDouble(vehicle -> vehicle.getMaxSpeed().getKilometersPerHour())
+					.average()
+					.orElseThrow(() -> new RuntimeException("No vehicles found"));
+		}
+
+		@Override
+		public String toString() {
+			return totalCars + " vehicles:\n " +
+					averageKph + "km/h average\n " +
+					maxKph + "km/h max";
 		}
 	}
 }

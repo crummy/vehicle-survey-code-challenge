@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.*;
+import static java.time.temporal.ChronoUnit.DAYS;
 
 class App {
 	public static void main(String[] args) {
@@ -18,11 +19,11 @@ class App {
 			Path file = validateFile(args[0]);
 
 			List<SensorPoint> sensorPoints = SensorPointParser.parse(file).getPoints();
-			Clock clock = validateClock(args).orElse(Clock.systemUTC());
 			List<Vehicle> vehicles = new VehicleFactory(sensorPoints).getVehicles();
-			Survey survey = new Survey(vehicles);
+			Clock clock = validateClock(args).orElse(Clock.systemUTC());
+			Survey survey = new Survey(vehicles, clock);
 
-			print(survey);
+			print(survey, clock);
 		} catch (Exception e) {
 			abort("An uncaught exception occurred: " + e.getMessage());
 		}
@@ -55,11 +56,12 @@ class App {
 		System.exit(1);
 	}
 
-	private static void print(Survey survey) {
+	private static void print(Survey survey, Clock clock) {
 		System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed().getKilometersPerHour() + "kph");
 		System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +
 				survey.getTotalCars(SOUTHBOUND) + " southbound)");
 		System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
 		System.out.println("Cars per day: " + survey.getCarsPerDay());
+		System.out.println("Second day: " + survey.getSummary(clock.instant().plus(1, DAYS), clock.instant().plus(2, DAYS)));
 	}
 }
