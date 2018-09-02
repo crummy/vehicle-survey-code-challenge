@@ -16,27 +16,6 @@ class SensorPoint {
 		this.day = day;
 	}
 
-	@Override
-	public String toString() {
-		return sensor + Long.toString(millis);
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o)
-			return true;
-		if (o == null || getClass() != o.getClass())
-			return false;
-		SensorPoint point = (SensorPoint) o;
-		return sensor == point.sensor &&
-				millis == point.millis;
-	}
-
-	@Override
-	public int hashCode() {
-		return Objects.hash(sensor, millis);
-	}
-
 	int getDay() {
 		return day;
 	}
@@ -51,5 +30,27 @@ class SensorPoint {
 
 	char getSensor() {
 		return sensor;
+	}
+
+	@Override
+	public String toString() {
+		return sensor + Long.toString(millis);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		SensorPoint that = (SensorPoint) o;
+		return sensor == that.sensor &&
+				millis == that.millis &&
+				day == that.day;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(sensor, millis, day);
 	}
 }

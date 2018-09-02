@@ -58,7 +58,7 @@ class SensorPointParser {
 	}
 
 	private boolean dayChanged(long millis) {
-		return lastPoint.getMillis() < millis;
+		return lastPoint.getMillis() > millis;
 	}
 
 	List<SensorPoint> getPoints() {
