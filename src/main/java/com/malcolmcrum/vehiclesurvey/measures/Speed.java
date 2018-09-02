@@ -1,6 +1,7 @@
 package com.malcolmcrum.vehiclesurvey.measures;
 
 import java.time.Duration;
+import java.util.Objects;
 
 /**
  * A helper class to store speed in a consistent manner to allow conversion between units without confusion.
@@ -32,5 +33,20 @@ public class Speed implements Comparable<Speed> {
 	@Override
 	public int compareTo(Speed o) {
 		return Double.compare(this.metersPerSecond, o.metersPerSecond);
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (this == o)
+			return true;
+		if (o == null || getClass() != o.getClass())
+			return false;
+		Speed speed = (Speed) o;
+		return Double.compare(speed.metersPerSecond, metersPerSecond) == 0;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(metersPerSecond);
 	}
 }

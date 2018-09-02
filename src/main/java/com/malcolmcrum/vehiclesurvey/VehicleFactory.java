@@ -1,17 +1,14 @@
 package com.malcolmcrum.vehiclesurvey;
 
-import java.time.Clock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 class VehicleFactory {
-	private final Clock clock;
 	private final List<SensorPoint> points;
 	private final List<Vehicle> vehicles = new ArrayList<>();
 
-	public VehicleFactory(Clock clock, List<SensorPoint> sensorPoints) {
-		this.clock = clock;
+	public VehicleFactory(List<SensorPoint> sensorPoints) {
 		this.points = sensorPoints;
 		calculateVehicles();
 	}
@@ -45,8 +42,8 @@ class VehicleFactory {
 
 	private void addDoubleSensorVehicle(SensorPoint point, SensorPoint secondPoint, SensorPoint thirdPoint,
 			SensorPoint fourthPoint) {
-		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), secondPoint.getTotalMillis(), thirdPoint.getTotalMillis(),
-				fourthPoint.getTotalMillis(), Vehicle.Direction.SOUTHBOUND);
+		Vehicle vehicle = new Vehicle(point.getInstant(), secondPoint.getInstant(), thirdPoint.getInstant(),
+				fourthPoint.getInstant(), Vehicle.Direction.SOUTHBOUND);
 		vehicles.add(vehicle);
 	}
 
@@ -55,7 +52,7 @@ class VehicleFactory {
 	}
 
 	private void addSingleSensorVehicle(SensorPoint point, SensorPoint nextPoint) {
-		Vehicle vehicle = new Vehicle(clock, point.getTotalMillis(), nextPoint.getTotalMillis(), Vehicle.Direction.NORTHBOUND);
+		Vehicle vehicle = new Vehicle(point.getInstant(), nextPoint.getInstant(), Vehicle.Direction.NORTHBOUND);
 		vehicles.add(vehicle);
 	}
 

@@ -47,7 +47,7 @@ class SensorPointParser {
 		int day;
 		if (lastPoint == null) {
 			day = 0;
-		} else if (lastPoint.getMillis() < millis) {
+		} else if (dayChanged(millis)) {
 			day = lastPoint.getDay() + 1;
 		} else {
 			day = lastPoint.getDay();
@@ -55,6 +55,10 @@ class SensorPointParser {
 		SensorPoint sensorPoint = new SensorPoint(sensor, millis, day);
 		lastPoint = sensorPoint;
 		return sensorPoint;
+	}
+
+	private boolean dayChanged(long millis) {
+		return lastPoint.getMillis() < millis;
 	}
 
 	List<SensorPoint> getPoints() {

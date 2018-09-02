@@ -3,48 +3,39 @@ package com.malcolmcrum.vehiclesurvey;
 import com.malcolmcrum.vehiclesurvey.measures.Length;
 import com.malcolmcrum.vehiclesurvey.measures.Speed;
 
-import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static java.time.temporal.ChronoUnit.MILLIS;
-
 class Vehicle {
-	private static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
+	static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
 
-	private final Instant time;
+	private final Instant firstSensor;
 	private final List<Duration> sensorIntervals = new ArrayList<>();
 	private final Direction direction;
 
-	Vehicle(Clock clock, long axleStart, long axleEnd, long secondAxleStart, long secondAxleEnd, Direction direction) {
-		this(clock, axleStart, axleEnd, direction);
-		this.sensorIntervals.add(durationBetween(secondAxleStart, secondAxleEnd));
+	Vehicle(Instant axleStart, Instant axleEnd, Instant secondAxleStart, Instant secondAxleEnd, Direction direction) {
+		this(axleStart, axleEnd, direction);
+		this.sensorIntervals.add(Duration.between(secondAxleStart, secondAxleEnd));
 	}
 
-	Vehicle(Clock clock, long axleStart, long axleEnd, Direction direction) {
-		this.time = Instant.now(clock).plus(axleStart, MILLIS);
-		this.sensorIntervals.add(durationBetween(axleStart, axleEnd));
+	Vehicle(Instant axleStart, Instant axleEnd, Direction direction) {
+		this.firstSensor = axleStart;
+		this.sensorIntervals.add(Duration.between(axleStart, axleEnd));
 		this.direction = direction;
 	}
 
-	private Duration durationBetween(long axleStart, long axleEnd) {
-		Instant start = Instant.ofEpochMilli(axleStart);
-		Instant end = Instant.ofEpochMilli(axleEnd);
-		return Duration.between(start, end);
-	}
-
-	Instant getTime() {
-		return time;
+	Instant getFirstSensor() {
+		return firstSensor;
 	}
 
 	Speed getAverageSpeed() {
 		return new Speed(WHEELBASE, getAverageSensorInterval());
 	}
 
-	Duration getAverageSensorInterval() {
+	private Duration getAverageSensorInterval() {
 		Duration total = sensorIntervals.stream().reduce(Duration.ZERO, Duration::plus);
 		return total.dividedBy(sensorIntervals.size());
 	}
@@ -66,13 +57,12 @@ class Vehicle {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		Vehicle vehicle = (Vehicle) o;
-		return Objects.equals(time, vehicle.time) &&
-				Objects.equals(sensorIntervals, vehicle.sensorIntervals);
+		return Objects.equals(sensorIntervals, vehicle.sensorIntervals);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(time, sensorIntervals);
+		return Objects.hash(sensorIntervals);
 	}
 
 	public Direction getDirection() {

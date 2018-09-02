@@ -1,12 +1,11 @@
 package com.malcolmcrum.vehiclesurvey;
 
-import java.time.Duration;
-import java.time.temporal.ChronoUnit;
+import java.time.Instant;
 import java.util.Objects;
 
-class SensorPoint {
-	private final static long MILLIS_IN_DAY = Duration.of(1, ChronoUnit.DAYS).toMillis();
+import static java.time.temporal.ChronoUnit.DAYS;
 
+class SensorPoint {
 	private final char sensor;
 	private final long millis;
 	private final int day;
@@ -46,8 +45,8 @@ class SensorPoint {
 		return millis;
 	}
 
-	long getTotalMillis() {
-		return day * MILLIS_IN_DAY + millis;
+	Instant getInstant() {
+		return Instant.ofEpochMilli(millis).plus(day, DAYS);
 	}
 
 	char getSensor() {

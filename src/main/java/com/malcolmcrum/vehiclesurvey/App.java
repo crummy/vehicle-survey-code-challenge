@@ -19,12 +19,10 @@ class App {
 
 			List<SensorPoint> sensorPoints = SensorPointParser.parse(file).getPoints();
 			Clock clock = validateClock(args).orElse(Clock.systemUTC());
-			List<Vehicle> vehicles = new VehicleFactory(clock, sensorPoints).getVehicles();
+			List<Vehicle> vehicles = new VehicleFactory(sensorPoints).getVehicles();
 			Survey survey = new Survey(vehicles);
-			System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed().getKilometersPerHour() + "kph");
-			System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +
-					survey.getTotalCars(SOUTHBOUND) + " southbound)");
-			System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
+
+			print(survey);
 		} catch (Exception e) {
 			abort("An uncaught exception occurred: " + e.getMessage());
 		}
@@ -55,5 +53,12 @@ class App {
 	private static void abort(String reason) {
 		System.out.println(reason);
 		System.exit(1);
+	}
+
+	private static void print(Survey survey) {
+		System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed().getKilometersPerHour() + "kph");
+		System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +
+				survey.getTotalCars(SOUTHBOUND) + " southbound)");
+		System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
 	}
 }

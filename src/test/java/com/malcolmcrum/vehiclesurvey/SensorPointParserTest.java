@@ -51,7 +51,7 @@ public class SensorPointParserTest {
 				.isInstanceOf(IOException.class);
 	}
 
-	private List<String> listOf (String... items) {
+	static List<String> listOf (String... items) {
 		return Arrays.stream(items).collect(Collectors.toList());
 	}
 }
