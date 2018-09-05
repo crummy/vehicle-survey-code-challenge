@@ -71,5 +71,6 @@ class App {
 		System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
 		System.out.println("Cars per day: " + survey.getCarsPerDay());
 		System.out.println("Second day: " + survey.getSummary(clock.instant().plus(1, DAYS), clock.instant().plus(2, DAYS)));
+		System.out.println("Speed distribution: " + survey.getSpeedDistribution());
 	}
 }

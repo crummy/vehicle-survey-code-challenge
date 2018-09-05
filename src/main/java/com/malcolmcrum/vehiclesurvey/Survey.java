@@ -76,6 +76,18 @@ class Survey {
 				.orElseThrow(() -> new RuntimeException("No vehicles found to calculate max speed for"));
 	}
 
+	Map<String, Long> getSpeedDistribution() {
+		return vehicles.stream()
+				.map(Vehicle::getAverageSpeed)
+				.collect(groupingBy(this::getSpeedIntervals, TreeMap::new, counting()));
+
+	}
+
+	private String getSpeedIntervals(Speed speed) {
+		int rounded = (int)(speed.getKilometersPerHour() / 10);
+		return Integer.toString(rounded) + "0kph";
+	}
+
 	static class InvalidSurveyException extends RuntimeException {
 		InvalidSurveyException(String message) {
 			super(message);
