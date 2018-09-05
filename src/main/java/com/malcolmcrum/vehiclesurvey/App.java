@@ -1,54 +1,62 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Instant;
-import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
-import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.*;
+import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.NORTHBOUND;
+import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 class App {
+	private static final FileReader fileReader = new FileReader();
+	private static final Clock DEFAULT_CLOCK = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
+
 	public static void main(String[] args) {
 		try {
 			validateArgs(args);
-			Path file = validateFile(args[0]);
 
-			List<SensorPoint> sensorPoints = SensorPointParser.parse(file).getPoints();
+			Clock clock = parseClock(args).orElse(DEFAULT_CLOCK);
+			List<String> data = fileReader.parse(args[0]);
+			List<SensorPoint> sensorPoints = new SensorPointParser(clock, data).getPoints();
 			List<Vehicle> vehicles = new VehicleFactory(sensorPoints).getVehicles();
-			Clock clock = validateClock(args).orElse(Clock.systemUTC());
 			Survey survey = new Survey(vehicles, clock);
 
 			print(survey, clock);
 		} catch (Exception e) {
-			abort("An uncaught exception occurred: " + e.getMessage());
+			e.printStackTrace();
+			abort("An uncaught exception occurred: " + e);
 		}
 	}
 
-	private static Optional<Clock> validateClock(String[] args) {
+	private static Optional<Clock> parseClock(String[] args) {
 		if (args.length <= 2) {
 			return Optional.empty();
 		} else {
-			return Optional.of(Clock.fixed(Instant.EPOCH, ZoneId.systemDefault()));
+			return Optional.of(Clock.systemDefaultZone()); // TODO parse from args
 		}
 	}
 
-	private static void validateArgs(String[] args) {
+	private static void validateArgs(String[] args) throws IOException {
 		if (args.length == 0) {
 			abort("An argument is missing. Usage:\n  <jar> <vehicledata.txt> [<startTime>]");
 		}
-	}
 
-	private static Path validateFile(String path) {
-		Path file = Paths.get(path);
-		if (Files.notExists(file)) {
-			abort("The provided file does not exist: " + path);
+		String file = args[0];
+		Path path = Paths.get(file);
+		if (Files.notExists(path)) {
+			throw new IOException("The provided file does not exist: " + path);
 		}
-		return file;
+
+		if (args.length >= 2) {
+			// TODO validate clock time
+		}
 	}
 
 	private static void abort(String reason) {

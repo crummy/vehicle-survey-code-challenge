@@ -1,13 +1,14 @@
 package com.malcolmcrum.vehiclesurvey;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.MILLIS;
 
 /**
  * Parses lines of data and generates SensorPoints from them.
@@ -23,18 +24,15 @@ class SensorPointParser {
 
 	private static final Pattern POINT_PATTERN = Pattern.compile("([AB])(\\d+)");
 	private final List<SensorPoint> points;
-	private SensorPoint lastPoint = null; // Keep track of the previously recorded point so we can detect day changes
+	private final Clock clock;
+	private Long lastMillis = null; // Keep track of the previously recorded data so we can detect day changes
+	private Integer lastDay = null;
 
-	SensorPointParser(List<String> data) throws ParsingException{
+	SensorPointParser(Clock clock, List<String> data) {
+		this.clock = clock;
 		this.points = data.stream()
 				.map(this::parsePoint)
 				.collect(Collectors.toList());
-	}
-
-	static SensorPointParser parse(Path file) throws IOException, ParsingException {
-		try (Stream<String> lines = Files.lines(file)) {
-			return new SensorPointParser(lines.collect(Collectors.toList()));
-		}
 	}
 
 	private SensorPoint parsePoint(String line) throws ParsingException {
@@ -44,21 +42,30 @@ class SensorPointParser {
 		}
 		char sensor = matcher.group(1).charAt(0);
 		long millis = Long.parseLong(matcher.group(2));
-		int day;
-		if (lastPoint == null) {
-			day = 0;
-		} else if (dayChanged(millis)) {
-			day = lastPoint.getDay() + 1;
-		} else {
-			day = lastPoint.getDay();
-		}
-		SensorPoint sensorPoint = new SensorPoint(sensor, millis, day);
-		lastPoint = sensorPoint;
+		int day = calculateDay(millis);
+		Instant instant = toClockAdjustedInstant(millis, day);
+		SensorPoint sensorPoint = new SensorPoint(sensor, instant);
+		lastMillis = millis;
+		lastDay = day;
 		return sensorPoint;
 	}
 
+	private int calculateDay(long millis) {
+		if (lastMillis == null && lastDay == null) {
+			return 0;
+		} else if (dayChanged(millis)) {
+			return lastDay + 1;
+		} else {
+			return lastDay;
+		}
+	}
+
 	private boolean dayChanged(long millis) {
-		return lastPoint.getMillis() > millis;
+		return lastMillis > millis;
+	}
+
+	private Instant toClockAdjustedInstant(long millis, int day) {
+		return Instant.now(clock).plus(millis, MILLIS).plus(day, DAYS);
 	}
 
 	List<SensorPoint> getPoints() {

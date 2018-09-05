@@ -2,6 +2,7 @@ package com.malcolmcrum.vehiclesurvey;
 
 import org.junit.Test;
 
+import java.time.Clock;
 import java.util.List;
 
 import static com.malcolmcrum.vehiclesurvey.SensorPointParserTest.listOf;
@@ -13,7 +14,7 @@ public class EndToEndTest {
 	public void testSingleSensorCar() {
 		List<String> singleSensor = listOf("A98186", "A98333");
 
-		List<SensorPoint> points = new SensorPointParser(singleSensor).getPoints();
+		List<SensorPoint> points = new SensorPointParser(Clock.systemUTC(), singleSensor).getPoints();
 		List<Vehicle> vehicles = new VehicleFactory(points).getVehicles();
 		Survey survey = new Survey(vehicles);
 

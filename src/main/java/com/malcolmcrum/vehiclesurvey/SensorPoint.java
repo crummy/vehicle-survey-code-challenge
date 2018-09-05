@@ -3,29 +3,17 @@ package com.malcolmcrum.vehiclesurvey;
 import java.time.Instant;
 import java.util.Objects;
 
-import static java.time.temporal.ChronoUnit.DAYS;
-
 class SensorPoint {
 	private final char sensor;
-	private final long millis;
-	private final int day;
+	private final Instant instant;
 
-	SensorPoint(char sensor, long millis, int day) {
+	SensorPoint(char sensor, Instant instant) {
 		this.sensor = sensor;
-		this.millis = millis;
-		this.day = day;
-	}
-
-	int getDay() {
-		return day;
-	}
-
-	long getMillis() {
-		return millis;
+		this.instant = instant;
 	}
 
 	Instant getInstant() {
-		return Instant.ofEpochMilli(millis).plus(day, DAYS);
+		return instant;
 	}
 
 	char getSensor() {
@@ -34,7 +22,7 @@ class SensorPoint {
 
 	@Override
 	public String toString() {
-		return sensor + Long.toString(millis);
+		return sensor + " " + instant;
 	}
 
 	@Override
@@ -45,12 +33,11 @@ class SensorPoint {
 			return false;
 		SensorPoint that = (SensorPoint) o;
 		return sensor == that.sensor &&
-				millis == that.millis &&
-				day == that.day;
+				Objects.equals(instant, that.instant);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(sensor, millis, day);
+		return Objects.hash(sensor, instant);
 	}
 }

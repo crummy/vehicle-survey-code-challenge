@@ -92,11 +92,11 @@ class Survey {
 			this.averageKph = vehicles.stream()
 					.mapToDouble(vehicle -> vehicle.getAverageSpeed().getKilometersPerHour())
 					.average()
-					.orElseThrow(() -> new RuntimeException("No vehicles found"));
+					.orElse(0);
 			this.maxKph = vehicles.stream()
 					.mapToDouble(vehicle -> vehicle.getMaxSpeed().getKilometersPerHour())
 					.average()
-					.orElseThrow(() -> new RuntimeException("No vehicles found"));
+					.orElse(0);
 		}
 
 		@Override
