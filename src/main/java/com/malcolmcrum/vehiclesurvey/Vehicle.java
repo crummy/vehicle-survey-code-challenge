@@ -74,4 +74,9 @@ public class Vehicle {
 	public int hashCode() {
 		return Objects.hash(sensorIntervals, direction);
 	}
+
+	@Override
+	public String toString() {
+		return direction.toString() + sensorIntervals;
+	}
 }

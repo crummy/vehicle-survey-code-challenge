@@ -8,7 +8,7 @@ class VehicleFactory {
 	private final List<SensorPoint> points;
 	private final List<Vehicle> vehicles = new ArrayList<>();
 
-	public VehicleFactory(List<SensorPoint> sensorPoints) {
+	VehicleFactory(List<SensorPoint> sensorPoints) {
 		this.points = sensorPoints;
 		calculateVehicles();
 	}

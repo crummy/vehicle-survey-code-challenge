@@ -59,6 +59,26 @@ public class VehicleFactoryTest {
 		);
 	}
 
+	// A638379
+	// B638382
+	// A638520
+	// B638523
+	@Test
+	public void doubleSensorVehicleRealData() {
+		List<SensorPoint> points = listOf(
+				new SensorPoint('A', toInstant(638379, 0)),
+				new SensorPoint('B', toInstant(638382, 0)),
+				new SensorPoint('A', toInstant(638520, 0)),
+				new SensorPoint('B', toInstant(638523, 0))
+		);
+
+		List<Vehicle> vehicles = new VehicleFactory(points).getVehicles();
+
+		assertThat(vehicles).containsSequence(
+				new Vehicle(Instant.ofEpochMilli(638379), Instant.ofEpochMilli(638382), Instant.ofEpochMilli(638520), Instant.ofEpochMilli(638523), SOUTHBOUND)
+		);
+	}
+
 	private List<SensorPoint> listOf(SensorPoint... elements) {
 		return Arrays.stream(elements).collect(Collectors.toList());
 	}
