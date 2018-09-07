@@ -44,4 +44,9 @@ public class Speed implements Comparable<Speed> {
 	public int hashCode() {
 		return Objects.hash(metersPerSecond);
 	}
+
+	@Override
+	public String toString() {
+		return getKilometersPerHour() + "kph";
+	}
 }

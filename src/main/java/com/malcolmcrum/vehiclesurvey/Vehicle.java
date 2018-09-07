@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Objects;
 
 public class Vehicle {
-	public static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
+	static final Length WHEELBASE = Length.fromMeters(2.5); // Distance between axles
 
 	private final Instant firstSensor;
 	private final List<Duration> sensorIntervals = new ArrayList<>();
 	private final Direction direction;
 
-	Vehicle(Instant axleStart, Instant axleEnd, Instant secondAxleStart, Instant secondAxleEnd, Direction direction) {
+	Vehicle(Instant axleStart, Instant secondAxleStart, Instant axleEnd, Instant secondAxleEnd, Direction direction) {
 		this(axleStart, axleEnd, direction);
 		this.sensorIntervals.add(Duration.between(secondAxleStart, secondAxleEnd));
 	}

@@ -59,10 +59,6 @@ public class VehicleFactoryTest {
 		);
 	}
 
-	// A638379
-	// B638382
-	// A638520
-	// B638523
 	@Test
 	public void doubleSensorVehicleRealData() {
 		List<SensorPoint> points = listOf(
