@@ -5,6 +5,7 @@ import com.malcolmcrum.vehiclesurvey.measures.Speed;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -86,6 +87,21 @@ class Survey {
 	private String getSpeedIntervals(Speed speed) {
 		int rounded = (int)(speed.getKilometersPerHour() / 10);
 		return Integer.toString(rounded) + "0kph";
+	}
+
+	String getBusiestHour() {
+		return vehicles.stream()
+				.collect(groupingBy(this::getHourIntervals, TreeMap::new, counting()))
+				.entrySet()
+				.stream()
+				.max(Comparator.comparingLong(Map.Entry::getValue))
+				.map(entry -> entry.getKey() + " (" + entry.getValue() + " vehicles)")
+				.orElseThrow(() -> new InvalidSurveyException("No vehicles found"));
+	}
+
+	private String getHourIntervals(Vehicle vehicle) {
+		LocalDateTime dateTime = LocalDateTime.ofInstant(vehicle.getFirstSensor(), clock.getZone());
+		return dateTime.toLocalTime().getHour() + ":00";
 	}
 
 	static class InvalidSurveyException extends RuntimeException {
