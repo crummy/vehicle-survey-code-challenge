@@ -5,10 +5,7 @@ import com.malcolmcrum.vehiclesurvey.measures.Speed;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.counting;
@@ -104,18 +101,36 @@ class Survey {
 		return dateTime.toLocalTime().getHour() + ":00";
 	}
 
+	Map<String, Summary> getSummaries() {
+		Map<String, List<Vehicle>> vehiclesPerHour = new TreeMap<>();
+		for (Vehicle vehicle : vehicles) {
+			String dayHourInterval = getDayHourIntervals(vehicle);
+			List<Vehicle> vehicles = vehiclesPerHour.computeIfAbsent(dayHourInterval, interval -> new ArrayList<>());
+			vehicles.add(vehicle);
+		}
+		return vehiclesPerHour.entrySet()
+				.stream()
+				.collect(Collectors.toMap(Map.Entry::getKey, entry -> new Summary(entry.getValue()), (entry, map) -> entry, TreeMap::new));
+
+	}
+
+	private String getDayHourIntervals(Vehicle vehicle) {
+		LocalDateTime dateTime = LocalDateTime.ofInstant(vehicle.getFirstSensor(), clock.getZone());
+		return String.format("%s, %2d:00", dateTime.toLocalDate(), dateTime.toLocalTime().getHour());
+	}
+
 	static class InvalidSurveyException extends RuntimeException {
 		InvalidSurveyException(String message) {
 			super(message);
 		}
 	}
 
-	private static class Summary {
-		private final int totalCars;
-		private final double averageKph;
-		private final double maxKph;
+	static class Summary {
+		final int totalCars;
+		final double averageKph;
+		final double maxKph;
 
-		public Summary(List<Vehicle> vehicles) {
+		Summary(List<Vehicle> vehicles) {
 			this.totalCars = vehicles.size();
 			this.averageKph = vehicles.stream()
 					.mapToDouble(vehicle -> vehicle.getAverageSpeed().getKilometersPerHour())
@@ -129,9 +144,7 @@ class Survey {
 
 		@Override
 		public String toString() {
-			return totalCars + " vehicles:\n " +
-					averageKph + "km/h average\n " +
-					maxKph + "km/h max";
+			return String.format("%d vehicles: %3fkm/h average, %3fkm/h max", totalCars, averageKph, maxKph);
 		}
 	}
 }

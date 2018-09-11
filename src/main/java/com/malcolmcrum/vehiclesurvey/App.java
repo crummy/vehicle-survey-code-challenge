@@ -1,67 +1,33 @@
 package com.malcolmcrum.vehiclesurvey;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.Clock;
-import java.time.Instant;
-import java.time.ZoneOffset;
 import java.util.List;
-import java.util.Optional;
 
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.NORTHBOUND;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
+import static java.time.temporal.ChronoUnit.HOURS;
 
 class App {
 	private static final FileReader fileReader = new FileReader();
-	private static final Clock DEFAULT_CLOCK = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
 
 	public static void main(String[] args) {
 		try {
-			validateArgs(args);
+			System.out.println("VEHICLE TRAFFIC ANALYSIS TOOL");
+			System.out.println("-----------------------------");
 
-			Clock clock = parseClock(args).orElse(DEFAULT_CLOCK);
-			List<String> data = fileReader.parse(args[0]);
-			List<SensorPoint> sensorPoints = new SensorPointParser(clock, data).getPoints();
+			Configuration config = new Configuration(args);
+
+			List<String> data = fileReader.parse(config.getPath());
+			List<SensorPoint> sensorPoints = new SensorPointParser(config.getClock(), data).getPoints();
 			List<Vehicle> vehicles = new VehicleFactory(sensorPoints).getVehicles();
-			Survey survey = new Survey(vehicles, clock);
+			Survey survey = new Survey(vehicles, config.getClock());
 
-			print(survey, clock);
+			print(survey, config.getClock());
 		} catch (Exception e) {
 			e.printStackTrace();
-			abort("An uncaught exception occurred: " + e);
+			System.out.println("An uncaught exception occurred: " + e);
 		}
-	}
-
-	private static Optional<Clock> parseClock(String[] args) {
-		if (args.length <= 2) {
-			return Optional.empty();
-		} else {
-			return Optional.of(Clock.systemDefaultZone()); // TODO parse from args
-		}
-	}
-
-	private static void validateArgs(String[] args) throws IOException {
-		if (args.length == 0) {
-			abort("An argument is missing. Usage:\n  <jar> <vehicledata.txt> [<startTime>]");
-		}
-
-		String file = args[0];
-		Path path = Paths.get(file);
-		if (Files.notExists(path)) {
-			throw new IOException("The provided file does not exist: " + path);
-		}
-
-		if (args.length >= 2) {
-			// TODO validate clock time
-		}
-	}
-
-	private static void abort(String reason) {
-		System.out.println(reason);
-		System.exit(1);
 	}
 
 	private static void print(Survey survey, Clock clock) {
@@ -70,8 +36,31 @@ class App {
 				survey.getTotalCars(SOUTHBOUND) + " southbound)");
 		System.out.println("Maximum speed: " + survey.getMaxSpeed().getKilometersPerHour() + "kph");
 		System.out.println("Cars per day: " + survey.getCarsPerDay());
-		System.out.println("Third day, " + survey.getSummary(clock.instant().plus(2, DAYS), clock.instant().plus(2, DAYS)));
+
+		System.out.println("Third day, morning rush hour: " + survey.getSummary(
+				clock.instant().plus(2, DAYS).plus(8, HOURS),
+				clock.instant().plus(2, DAYS).plus(10, HOURS)
+		));
+		System.out.println("Third day: " + survey.getSummary(
+				clock.instant().plus(2, DAYS),
+				clock.instant().plus(3, DAYS)
+		));
+
+
 		System.out.println("Speed distribution: " + survey.getSpeedDistribution());
 		System.out.println("Busiest hour: " + survey.getBusiestHour());
+
+		System.out.println("Cars per hour:");
+		survey.getSummaries().forEach((interval, summary) -> {
+			StringBuilder builder = new StringBuilder(interval);
+			builder.append(": ");
+			float count = (float)summary.totalCars / survey.getTotalCars() * 20 * survey.getSummaries().size(); // 80 characters is standard terminal width... right?
+			for (int i = 0; i < count; ++i) {
+				builder.append("|");
+			}
+			builder.append(" ");
+			builder.append(summary.totalCars);
+			System.out.println(builder);
+		});
 	}
 }
