@@ -11,6 +11,9 @@ import java.util.stream.Collectors;
 import static java.util.stream.Collectors.counting;
 import static java.util.stream.Collectors.groupingBy;
 
+/**
+ * Given a list of Vehicles, returns statistical information about the fleet, e.g. average speed, cars per day.
+ */
 class Survey {
 
 	private final List<Vehicle> vehicles;

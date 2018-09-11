@@ -4,6 +4,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Given a list of SensorPoints, calculates the instants of contact and generates a list of Vehicles from the data
+ * NOTE: There is room for a race condition here - if two cars travelling north and south simultaneously trigger the sensors, an exception
+ * will be thrown.
+ */
 class VehicleFactory {
 	private final List<SensorPoint> points;
 	private final List<Vehicle> vehicles = new ArrayList<>();

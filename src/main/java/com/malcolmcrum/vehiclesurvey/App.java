@@ -1,16 +1,23 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Clock;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.NORTHBOUND;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
 
+/**
+ * Root class, designed to serve as a simple way to execute a survey against a test file.
+ * Can also take a beginning date, otherwise it will use unix time 0.
+ */
 class App {
-	private static final FileReader fileReader = new FileReader();
-
 	public static void main(String[] args) {
 		try {
 			System.out.println("VEHICLE TRAFFIC ANALYSIS TOOL");
@@ -18,7 +25,7 @@ class App {
 
 			Configuration config = new Configuration(args);
 
-			List<String> data = fileReader.parse(config.getPath());
+			List<String> data = parse(config.getPath());
 			List<SensorPoint> sensorPoints = new SensorPointParser(config.getClock(), data).getPoints();
 			List<Vehicle> vehicles = new VehicleFactory(sensorPoints).getVehicles();
 			Survey survey = new Survey(vehicles, config.getClock());
@@ -30,6 +37,14 @@ class App {
 		}
 	}
 
+	private static List<String> parse(Path path) throws IOException {
+		try (Stream<String> lines = Files.lines(path)) {
+			return lines.collect(Collectors.toList());
+		}
+	}
+
+	// The focus of this project has been data-processing work, and demonstrating the ability to return the results of particular queries,
+	// rather than visualizing them in an interesting way. So I just print out some sample statistics I generated.
 	private static void print(Survey survey, Clock clock) {
 		System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed());
 		System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +

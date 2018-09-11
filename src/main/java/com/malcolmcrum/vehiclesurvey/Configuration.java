@@ -9,6 +9,9 @@ import java.time.LocalDate;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Validates input, and stores configuration information for the app for later retrieval
+ */
 class Configuration {
 	private static final Clock DEFAULT_CLOCK = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
 
@@ -26,7 +29,7 @@ class Configuration {
 			try {
 				date = LocalDate.parse(args[1]);
 			} catch (DateTimeParseException e) {
-				throw new ConfigurationException("Failed to validate clock parameter '" + args[1] + "'", e);
+				throw new ConfigurationException("Failed to validate clock parameter '" + args[1] + "' - please format like 2001-12-31", e);
 			}
 			Instant instant = date.atStartOfDay().toInstant(ZoneOffset.UTC);
 			return Clock.fixed(instant, ZoneOffset.UTC);
