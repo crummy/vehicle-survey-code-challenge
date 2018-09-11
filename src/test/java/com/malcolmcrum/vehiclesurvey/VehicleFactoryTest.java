@@ -14,6 +14,7 @@ import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class VehicleFactoryTest {
 
@@ -73,6 +74,21 @@ public class VehicleFactoryTest {
 		assertThat(vehicles).containsSequence(
 				new Vehicle(Instant.ofEpochMilli(638379), Instant.ofEpochMilli(638382), Instant.ofEpochMilli(638520), Instant.ofEpochMilli(638523), SOUTHBOUND)
 		);
+	}
+
+	// This test represents a bug in the parser - if two vehicles cross simultaneously, north and south, parsing will fail
+	@Test
+	public void simultaneousVehicles() {
+		List<SensorPoint> mixedSensors = listOf(
+				new SensorPoint('A', toInstant(0, 0)), // northbound
+				new SensorPoint('A', toInstant(1, 0)), // southbound
+				new SensorPoint('B', toInstant(2, 0)), // northbound
+				new SensorPoint('A', toInstant(10, 0)), // northbound
+				new SensorPoint('A', toInstant(11, 0)), // southbound
+				new SensorPoint('B', toInstant(12, 0)) // northbound
+		);
+
+		assertThatThrownBy(() -> new VehicleFactory(mixedSensors).getVehicles()).isInstanceOf(VehicleFactory.VehicleParsingException.class);
 	}
 
 	private List<SensorPoint> listOf(SensorPoint... elements) {
