@@ -1,10 +1,8 @@
 package com.malcolmcrum.vehiclesurvey;
 
-import com.malcolmcrum.vehiclesurvey.measures.Length;
 import com.malcolmcrum.vehiclesurvey.measures.Speed;
 
 import java.time.Clock;
-import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -88,7 +86,7 @@ class Survey {
 
 	private Speed getSpeedIntervals(Speed speed) {
 		int roundedKph = (int)(speed.getKilometersPerHour() / 10) * 10;
-		return new Speed(Length.fromKilometers(roundedKph), Duration.ofHours(1));
+		return Speed.fromKph(roundedKph);
 	}
 
 	String getBusiestHour() {
@@ -132,24 +130,26 @@ class Survey {
 
 	static class Summary {
 		final int totalCars;
-		final double averageKph;
-		final double maxKph;
+		final Speed averageKph;
+		final Speed maxKph;
 
 		Summary(List<Vehicle> vehicles) {
 			this.totalCars = vehicles.size();
-			this.averageKph = vehicles.stream()
+			double averageKph = vehicles.stream()
 					.mapToDouble(vehicle -> vehicle.getAverageSpeed().getKilometersPerHour())
 					.average()
 					.orElse(0);
-			this.maxKph = vehicles.stream()
+			this.averageKph = Speed.fromKph(averageKph);
+			double maxKph = vehicles.stream()
 					.mapToDouble(vehicle -> vehicle.getMaxSpeed().getKilometersPerHour())
 					.average()
 					.orElse(0);
+			this.maxKph = Speed.fromKph(maxKph);
 		}
 
 		@Override
 		public String toString() {
-			return String.format("%d vehicles: %.1fkm/h average, %.1fkm/h max", totalCars, averageKph, maxKph);
+			return String.format("%d vehicles: %s average, %s max", totalCars, averageKph, maxKph);
 		}
 	}
 }

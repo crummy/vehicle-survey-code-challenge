@@ -17,6 +17,10 @@ public class Speed implements Comparable<Speed> {
 		this.metersPerSecond = metersPerSecond;
 	}
 
+	public static Speed fromKph(double kph) {
+		return new Speed(Length.fromKilometers(kph), Duration.ofHours(1));
+	}
+
 	public double getMetersPerSecond() {
 		return metersPerSecond;
 	}

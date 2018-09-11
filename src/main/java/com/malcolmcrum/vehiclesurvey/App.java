@@ -62,7 +62,10 @@ class App {
 		));
 
 
-		System.out.println("Speed distribution: " + survey.getSpeedDistribution());
+		System.out.println("Speed distribution: ");
+		survey.getSpeedDistribution().forEach((speed, count) -> {
+			System.out.println(String.format(" %.0fkph: %d cars", speed.getKilometersPerHour(), count));
+		});
 		System.out.println("Busiest hour: " + survey.getBusiestHour());
 
 		System.out.println("Cars per hour:");
@@ -77,6 +80,9 @@ class App {
 			}
 			builder.append(" ");
 			builder.append(summary.totalCars);
+			builder.append(" (");
+			builder.append(summary.averageKph);
+			builder.append(" average)");
 			System.out.println(builder);
 		});
 	}
