@@ -77,6 +77,6 @@ public class Vehicle {
 
 	@Override
 	public String toString() {
-		return direction.toString() + sensorIntervals;
+		return direction.toString() + " " + firstSensor;
 	}
 }

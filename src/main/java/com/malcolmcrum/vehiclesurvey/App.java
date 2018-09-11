@@ -49,7 +49,8 @@ class App {
 		System.out.println("Average speed of all vehicles: " + survey.getAverageSpeed());
 		System.out.println("Total vehicles: " + survey.getTotalCars() + " (" + survey.getTotalCars(NORTHBOUND) + " northbound, " +
 				survey.getTotalCars(SOUTHBOUND) + " southbound)");
-		System.out.println("Maximum speed: " + survey.getMaxSpeed());
+		Vehicle fastestVehicle = survey.getFastestVehicle();
+		System.out.println("Maximum speed: " + fastestVehicle.getMaxSpeed() + " at " + fastestVehicle.getFirstSensor());
 		System.out.println("Cars per day: " + survey.getCarsPerDay());
 
 		System.out.println("Third day: " + survey.getSummary(

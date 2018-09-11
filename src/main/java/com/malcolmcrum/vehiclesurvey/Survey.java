@@ -70,10 +70,9 @@ class Survey {
 		return dateTime.toLocalDate().toString();
 	}
 
-	Speed getMaxSpeed() {
+	Vehicle getFastestVehicle() {
 		return vehicles.stream()
-				.map(Vehicle::getMaxSpeed)
-				.max(Speed::compareTo)
+				.max(Comparator.comparing(Vehicle::getMaxSpeed))
 				.orElseThrow(() -> new RuntimeException("No vehicles found to calculate max speed for"));
 	}
 
@@ -85,7 +84,7 @@ class Survey {
 	}
 
 	private Speed getSpeedIntervals(Speed speed) {
-		int roundedKph = (int)(speed.getKilometersPerHour() / 10) * 10;
+		int roundedKph = (int)Math.round(speed.getKilometersPerHour() / 10) * 10;
 		return Speed.fromKph(roundedKph);
 	}
 
