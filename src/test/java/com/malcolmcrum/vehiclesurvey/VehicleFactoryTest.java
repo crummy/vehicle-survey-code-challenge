@@ -88,6 +88,7 @@ public class VehicleFactoryTest {
 				new SensorPoint('B', toInstant(12, 0)) // northbound
 		);
 
+		//noinspection ResultOfMethodCallIgnored
 		assertThatThrownBy(() -> new VehicleFactory(mixedSensors).getVehicles()).isInstanceOf(VehicleFactory.VehicleParsingException.class);
 	}
 
