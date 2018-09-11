@@ -144,7 +144,7 @@ class Survey {
 
 		@Override
 		public String toString() {
-			return String.format("%d vehicles: %3fkm/h average, %3fkm/h max", totalCars, averageKph, maxKph);
+			return String.format("%d vehicles: %.1fkm/h average, %.1fkm/h max", totalCars, averageKph, maxKph);
 		}
 	}
 }

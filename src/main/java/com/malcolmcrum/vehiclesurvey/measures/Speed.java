@@ -47,6 +47,6 @@ public class Speed implements Comparable<Speed> {
 
 	@Override
 	public String toString() {
-		return getKilometersPerHour() + "kph";
+		return String.format("%.1fkph", getKilometersPerHour());
 	}
 }
