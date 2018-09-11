@@ -1,8 +1,10 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import com.malcolmcrum.vehiclesurvey.measures.Length;
 import com.malcolmcrum.vehiclesurvey.measures.Speed;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -77,16 +79,16 @@ class Survey {
 				.orElseThrow(() -> new RuntimeException("No vehicles found to calculate max speed for"));
 	}
 
-	Map<String, Long> getSpeedDistribution() {
+	Map<Speed, Long> getSpeedDistribution() {
 		return vehicles.stream()
 				.map(Vehicle::getAverageSpeed)
 				.collect(groupingBy(this::getSpeedIntervals, TreeMap::new, counting()));
 
 	}
 
-	private String getSpeedIntervals(Speed speed) {
-		int rounded = (int)(speed.getKilometersPerHour() / 10);
-		return Integer.toString(rounded) + "0kph";
+	private Speed getSpeedIntervals(Speed speed) {
+		int roundedKph = (int)(speed.getKilometersPerHour() / 10) * 10;
+		return new Speed(Length.fromKilometers(roundedKph), Duration.ofHours(1));
 	}
 
 	String getBusiestHour() {

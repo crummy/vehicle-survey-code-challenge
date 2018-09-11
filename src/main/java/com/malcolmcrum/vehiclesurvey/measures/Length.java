@@ -16,6 +16,10 @@ public class Length {
 		return new Length(m);
 	}
 
+	public static Length fromKilometers(double km) {
+		return new Length(km * 1000);
+	}
+
 	double getMeters() {
 		return meters;
 	}
