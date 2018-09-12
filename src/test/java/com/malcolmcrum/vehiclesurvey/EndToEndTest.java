@@ -1,6 +1,6 @@
 package com.malcolmcrum.vehiclesurvey;
 
-import com.malcolmcrum.vehiclesurvey.measures.Speed;
+import org.assertj.core.data.Offset;
 import org.junit.Test;
 
 import java.time.Clock;
@@ -22,6 +22,6 @@ public class EndToEndTest {
 
 		assertThat(survey.getTotalCars()).isEqualTo(1);
 		assertThat(survey.getFastestVehicle().getDirection()).isEqualTo(NORTHBOUND);
-		assertThat(survey.getAverageSpeed()).isEqualTo(Speed.fromKph(60));
+		assertThat(survey.getAverageSpeed().getKilometersPerHour()).isEqualTo(60, Offset.offset(0.01));
 	}
 }
