@@ -1,6 +1,6 @@
 # Vehicle Survey
 
-A coding challenge for Aconex. Written for Java 8.
+A coding challenge, written for Java 8.
 
 ## Instructions
 
