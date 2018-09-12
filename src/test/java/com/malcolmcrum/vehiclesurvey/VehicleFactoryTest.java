@@ -1,5 +1,6 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.time.Clock;
@@ -14,7 +15,6 @@ import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 public class VehicleFactoryTest {
 
@@ -78,18 +78,23 @@ public class VehicleFactoryTest {
 
 	// This test represents a bug in the parser - if two vehicles cross simultaneously, north and south, parsing will fail
 	@Test
+	@Ignore
 	public void simultaneousVehicles() {
 		List<SensorPoint> mixedSensors = listOf(
-				new SensorPoint('A', toInstant(0, 0)), // northbound
-				new SensorPoint('A', toInstant(1, 0)), // southbound
-				new SensorPoint('B', toInstant(2, 0)), // northbound
-				new SensorPoint('A', toInstant(10, 0)), // northbound
-				new SensorPoint('A', toInstant(11, 0)), // southbound
-				new SensorPoint('B', toInstant(12, 0)) // northbound
+				new SensorPoint('A', toInstant(0, 0)), // southbound
+				new SensorPoint('A', toInstant(1, 0)), // northbound
+				new SensorPoint('B', toInstant(2, 0)), // southbound
+				new SensorPoint('A', toInstant(10, 0)), // southbound
+				new SensorPoint('A', toInstant(11, 0)), // northbound
+				new SensorPoint('B', toInstant(12, 0)) // southbound
 		);
 
-		//noinspection ResultOfMethodCallIgnored
-		assertThatThrownBy(() -> new VehicleFactory(mixedSensors).getVehicles()).isInstanceOf(VehicleFactory.VehicleParsingException.class);
+		List<Vehicle> vehicles = new VehicleFactory(mixedSensors).getVehicles();
+
+		assertThat(vehicles).containsSequence(
+				new Vehicle(Instant.ofEpochMilli(1), Instant.ofEpochMilli(11), NORTHBOUND),
+				new Vehicle(Instant.ofEpochMilli(0), Instant.ofEpochMilli(2), Instant.ofEpochMilli(10), Instant.ofEpochMilli(12), SOUTHBOUND)
+		);
 	}
 
 	private List<SensorPoint> listOf(SensorPoint... elements) {

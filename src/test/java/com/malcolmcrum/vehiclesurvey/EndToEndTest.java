@@ -22,6 +22,6 @@ public class EndToEndTest {
 
 		assertThat(survey.getTotalCars()).isEqualTo(1);
 		assertThat(survey.getFastestVehicle().getDirection()).isEqualTo(NORTHBOUND);
-		assertThat(survey.getAverageSpeed().getKilometersPerHour()).isEqualTo(60, Offset.offset(0.01));
+		assertThat(survey.getAverageSpeed().getKilometersPerHour()).isEqualTo(60.4, Offset.offset(0.01));
 	}
 }
