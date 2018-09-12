@@ -47,7 +47,7 @@ public class VehicleTest {
 
 		Speed maxSpeed = vehicle.getMaxSpeed();
 
-		assertThat(maxSpeed).isEqualTo(new Speed(WHEELBASE, Duration.of(30, MILLIS)));
+		assertThat(maxSpeed).isEqualTo(new Speed(WHEELBASE, Duration.of(10, MILLIS)));
 	}
 
 	@Test

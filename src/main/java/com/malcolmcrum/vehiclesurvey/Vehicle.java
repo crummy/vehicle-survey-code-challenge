@@ -47,12 +47,12 @@ public class Vehicle {
 	}
 
 	Speed getMaxSpeed() {
-		return new Speed(WHEELBASE, getMaxSensorInterval());
+		return new Speed(WHEELBASE, getMinSensorInterval());
 	}
 
-	private Duration getMaxSensorInterval() {
+	private Duration getMinSensorInterval() {
 		return sensorIntervals.stream()
-				.max(Duration::compareTo)
+				.min(Duration::compareTo)
 				.orElseThrow(() -> new RuntimeException("No sensor intervals found to find maximum for"));
 	}
 
