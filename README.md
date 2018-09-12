@@ -29,6 +29,8 @@ Here are some potential pitfalls, or areas for improvement:
 * It's totally unoptimized. In particular, the Survey class iterates over the whole set of vehicles with each call. If we knew exactly
 what data was requested, we could iterate over the vehicles just once, generating all the data a single time.
 * It would probably choke on larger data sets. A time-series database would be a better choice for this sort of thing.
+* Very little validation is done - malformed data, cars travelling 0m/s or with simultaneous sensors for example all will cause the
+program to abort
 * Querying a new statistic (e.g. fastest vehicle on a certain day) requires editing Java code. It would be cool to support an actual
 query language.
 * There is a bug I've discovered that can occur if a car travels northbound during the signals of a southbound car. I have written a test
