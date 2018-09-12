@@ -165,7 +165,7 @@ class Survey {
 			this.averageKph = Speed.fromKph(averageKph);
 			double maxKph = vehicles.stream()
 					.mapToDouble(vehicle -> vehicle.getMaxSpeed().getKilometersPerHour())
-					.average()
+					.max()
 					.orElse(0);
 			this.maxKph = Speed.fromKph(maxKph);
 		}
