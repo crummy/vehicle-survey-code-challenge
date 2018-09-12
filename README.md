@@ -1,6 +1,6 @@
 # Vehicle Survey
 
-A coding challenge for Aconex
+A coding challenge for Aconex. Written for Java 8.s
 
 ## Instructions
 
@@ -31,3 +31,6 @@ what data was requested, we could iterate over the vehicles just once, generatin
 * It would probably choke on larger data sets. A time-series database would be a better choice for this sort of thing.
 * Querying a new statistic (e.g. fastest vehicle on a certain day) requires editing Java code. It would be cool to support an actual
 query language.
+* There is a bug I've discovered that can occur if a car travels northbound during the signals of a southbound car. I have written a test
+in VehicleFactoryTest.java that reproduces it - an exception is thrown. I think I could resolve this with a stack and perhaps some fuzzy
+logic to figure out what we expect a vehicle to look like.
