@@ -29,6 +29,18 @@ public class Speed implements Comparable<Speed> {
 		return metersPerSecond * 60 * 60 / 1000;
 	}
 
+	public Duration toDuration(Length length) {
+		double seconds = length.getMeters() / metersPerSecond;
+		double milliseconds = seconds * 1000;
+		return Duration.ofMillis((long)milliseconds);
+	}
+
+	public Length toDistance(Duration duration) {
+		double millimeters = metersPerSecond * duration.toMillis();
+		double meters = millimeters / 1000;
+		return Length.fromMeters(meters);
+	}
+
 	@Override
 	public int compareTo(Speed o) {
 		return Double.compare(this.metersPerSecond, o.metersPerSecond);

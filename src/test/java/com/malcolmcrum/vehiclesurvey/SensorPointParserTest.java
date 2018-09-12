@@ -4,18 +4,18 @@ import org.junit.Test;
 
 import java.time.Clock;
 import java.time.Instant;
-import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static com.malcolmcrum.vehiclesurvey.ListHelper.listOf;
+import static java.time.Instant.*;
+import static java.time.ZoneOffset.UTC;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.MILLIS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SensorPointParserTest {
 
-	private static final Clock CLOCK = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
+	private static final Clock CLOCK = Clock.fixed(EPOCH, UTC);
 
 	@Test
 	public void multipleSensors() {
@@ -79,11 +79,7 @@ public class SensorPointParserTest {
 		assertThat(points).isEmpty();
 	}
 
-	static List<String> listOf (String... items) {
-		return Arrays.stream(items).collect(Collectors.toList());
-	}
-
 	private Instant toInstant(long millis, int day) {
-		return Instant.now(CLOCK).plus(millis, MILLIS).plus(day, DAYS);
+		return now(CLOCK).plus(millis, MILLIS).plus(day, DAYS);
 	}
 }

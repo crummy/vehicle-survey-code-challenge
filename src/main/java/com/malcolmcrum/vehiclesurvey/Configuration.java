@@ -6,14 +6,16 @@ import java.nio.file.Paths;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.ZoneOffset;
 import java.time.format.DateTimeParseException;
+
+import static java.time.Instant.EPOCH;
+import static java.time.ZoneOffset.UTC;
 
 /**
  * Validates input, and stores configuration information for the app for later retrieval
  */
 class Configuration {
-	private static final Clock DEFAULT_CLOCK = Clock.fixed(Instant.EPOCH, ZoneOffset.UTC);
+	private static final Clock DEFAULT_CLOCK = Clock.fixed(EPOCH, UTC);
 
 	private final Path path;
 	private final Clock clock;
@@ -31,8 +33,8 @@ class Configuration {
 			} catch (DateTimeParseException e) {
 				throw new ConfigurationException("Failed to validate clock parameter '" + args[1] + "' - please format like 2001-12-31", e);
 			}
-			Instant instant = date.atStartOfDay().toInstant(ZoneOffset.UTC);
-			return Clock.fixed(instant, ZoneOffset.UTC);
+			Instant instant = date.atStartOfDay().toInstant(UTC);
+			return Clock.fixed(instant, UTC);
 		} else {
 			return null;
 		}

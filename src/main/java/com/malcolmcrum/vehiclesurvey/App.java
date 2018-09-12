@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.malcolmcrum.vehiclesurvey.Vehicle.*;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.NORTHBOUND;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -67,6 +68,20 @@ class App {
 				clock.instant().plus(2, DAYS).plus(10, HOURS).plus(30, MINUTES)
 		));
 
+		System.out.println("Average distance between vehicles between 8:30am and 9:00am of the fourth day, northbound: " +
+				survey.getAverageDistanceBetweenVehicles(
+						clock.instant().plus(3, DAYS).plus(8, HOURS).plus(30, MINUTES),
+						clock.instant().plus(3, DAYS).plus(9, HOURS),
+						Direction.NORTHBOUND
+				)
+		);
+		System.out.println("Average distance between vehicles between 8:30am and 9:00am of the fourth day, southbound: " +
+				survey.getAverageDistanceBetweenVehicles(
+						clock.instant().plus(3, DAYS).plus(8, HOURS).plus(30, MINUTES),
+						clock.instant().plus(3, DAYS).plus(9, HOURS),
+						Direction.SOUTHBOUND
+				)
+		);
 
 		System.out.println("Speed distribution: ");
 		survey.getSpeedDistribution().forEach((speed, count) -> {

@@ -15,6 +15,7 @@ public class Vehicle {
 	private final Instant firstSensor;
 	private final List<Duration> sensorIntervals = new ArrayList<>();
 	private final Direction direction;
+	private final Instant lastSensor;
 
 	Vehicle(Instant axleStart, Instant secondAxleStart, Instant axleEnd, Instant secondAxleEnd, Direction direction) {
 		this(axleStart, axleEnd, direction);
@@ -23,13 +24,17 @@ public class Vehicle {
 
 	Vehicle(Instant axleStart, Instant axleEnd, Direction direction) {
 		this.firstSensor = axleStart;
+		this.lastSensor = axleEnd;
 		this.sensorIntervals.add(Duration.between(axleStart, axleEnd));
 		this.direction = direction;
 	}
 
-	// At what instant does a car cross a physical point? For simplicity's sake I've decided it's the time the first sensor is triggered.
 	Instant getFirstSensor() {
 		return firstSensor;
+	}
+
+	Instant getLastSensor() {
+		return lastSensor;
 	}
 
 	Speed getAverageSpeed() {
@@ -51,7 +56,7 @@ public class Vehicle {
 				.orElseThrow(() -> new RuntimeException("No sensor intervals found to find maximum for"));
 	}
 
-	public Direction getDirection() {
+	Direction getDirection() {
 		return direction;
 	}
 

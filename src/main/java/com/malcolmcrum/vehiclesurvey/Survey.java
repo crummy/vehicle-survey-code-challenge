@@ -1,8 +1,10 @@
 package com.malcolmcrum.vehiclesurvey;
 
+import com.malcolmcrum.vehiclesurvey.measures.Length;
 import com.malcolmcrum.vehiclesurvey.measures.Speed;
 
 import java.time.Clock;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -119,6 +121,28 @@ class Survey {
 	private String getDayHourIntervals(Vehicle vehicle) {
 		LocalDateTime dateTime = LocalDateTime.ofInstant(vehicle.getFirstSensor(), clock.getZone());
 		return String.format("%s, %2d:00", dateTime.toLocalDate(), dateTime.toLocalTime().getHour());
+	}
+
+	Length getAverageDistanceBetweenVehicles(Instant from, Instant until, Vehicle.Direction direction) {
+		List<Vehicle> filtered = vehicles.stream()
+				.filter(vehicle -> vehicle.getFirstSensor().isAfter(from))
+				.filter(vehicle -> vehicle.getFirstSensor().isBefore(until))
+				.filter(vehicle -> vehicle.getDirection().equals(direction))
+				.collect(Collectors.toList());
+
+		double totalMeters = 0;
+		for (int i = 0; i < filtered.size() - 1; ++i) {
+			Vehicle vehicle = filtered.get(i);
+			Vehicle next = filtered.get(i+1);
+			Duration betweenSensors = Duration.between(vehicle.getLastSensor(), next.getFirstSensor());
+			Speed speed = vehicle.getAverageSpeed();
+			//km/h = s
+			// s * h = km
+			double mmPerSecond = speed.getMetersPerSecond() * betweenSensors.toMillis();
+			totalMeters += mmPerSecond / 1000;
+		}
+		double averageMeters = totalMeters / (filtered.size() - 1);
+		return Length.fromMeters(averageMeters);
 	}
 
 	static class InvalidSurveyException extends RuntimeException {

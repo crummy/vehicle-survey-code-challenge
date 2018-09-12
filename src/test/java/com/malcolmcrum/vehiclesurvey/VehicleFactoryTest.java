@@ -6,10 +6,9 @@ import org.junit.Test;
 import java.time.Clock;
 import java.time.Instant;
 import java.time.ZoneOffset;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static com.malcolmcrum.vehiclesurvey.ListHelper.listOf;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.NORTHBOUND;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -95,10 +94,6 @@ public class VehicleFactoryTest {
 				new Vehicle(Instant.ofEpochMilli(1), Instant.ofEpochMilli(11), NORTHBOUND),
 				new Vehicle(Instant.ofEpochMilli(0), Instant.ofEpochMilli(2), Instant.ofEpochMilli(10), Instant.ofEpochMilli(12), SOUTHBOUND)
 		);
-	}
-
-	private List<SensorPoint> listOf(SensorPoint... elements) {
-		return Arrays.stream(elements).collect(Collectors.toList());
 	}
 
 	private Instant toInstant(long millis, int day) {
