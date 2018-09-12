@@ -12,6 +12,7 @@ import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.NORTHBOUND;
 import static com.malcolmcrum.vehiclesurvey.Vehicle.Direction.SOUTHBOUND;
 import static java.time.temporal.ChronoUnit.DAYS;
 import static java.time.temporal.ChronoUnit.HOURS;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 /**
  * Root class, designed to serve as a simple way to execute a survey against a test file.
@@ -60,6 +61,10 @@ class App {
 		System.out.println("Third day, morning rush hour: " + survey.getSummary(
 				clock.instant().plus(2, DAYS).plus(8, HOURS),
 				clock.instant().plus(2, DAYS).plus(10, HOURS)
+		));
+		System.out.println("Third day, between 8:15am and 8:30am: " + survey.getSummary(
+				clock.instant().plus(2, DAYS).plus(8, HOURS).plus(15, MINUTES),
+				clock.instant().plus(2, DAYS).plus(10, HOURS).plus(30, MINUTES)
 		));
 
 
